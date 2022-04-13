@@ -1,13 +1,18 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <vector>
 #include <cstdlib>
 
 using std::cout; using std::cerr;
 using std::endl; using std::string;
 using std::ifstream; using std::ostringstream;
-using std::ofstream; using std::vector; using std::stringstream;
+using std::ofstream; using std::stringstream;
+
+int smallest(int x, int y, int z)
+{
+    int smallest = std::min(x,y);
+    return std::min(smallest,z);
+}
 
 int findEnergy( int block, int up, int down, int left , int right)
 {
@@ -15,6 +20,14 @@ int findEnergy( int block, int up, int down, int left , int right)
     int y = abs(up - block) + abs(block - down);
     int result = x  + y;
         return result;
+}
+
+int findCumulativeEnergy(int block, int left, int above, int right)
+{
+    int fromLeft = block + left;
+    int fromAbove = block + above ;
+    int fromRight = block + right;
+        return smallest(fromLeft, fromAbove, fromRight);
 }
 
 int main(int argc, char *argv[]) {
@@ -64,8 +77,6 @@ int main(int argc, char *argv[]) {
         //cout << endl;
     }
     int energyMatrix [columns][rows];
-
-    //int findEnergy( int block, int up, int down, int left , int right)
 
     for (int i = 0; i< columns; i++) //fill in energy matrix
     {
@@ -124,14 +135,41 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    int cumulativeEnergyMatrix[columns][rows];
+    for (int i = 0; i< columns; i++) //fill in energy matrix
+    {
+        for(int j = 0; j<rows; j++)
+        {   
+            if (i == 0) // first rows numbers do not change
+            {
+                cumulativeEnergyMatrix [i][j] = energyMatrix [i][j];
+            }
+            
+            else if (j == 0) // first column does not have a left value
+            {
+                cumulativeEnergyMatrix [i][j] = std::min (energyMatrix[i][j] + cumulativeEnergyMatrix[i-1][j], energyMatrix[i][j] + cumulativeEnergyMatrix[i][j-1]);
+                //cumulativeEnergyMatrix [i][j] = std::min (energyMatrix[i][j] + cumulativeEnergyMatrix[i-1][j], energyMatrix[i][j] + cumulativeEnergyMatrix[i][j+1]);
+            }
+            else if (j == rows -1) //  last column does not have a right value
+            {
+                cumulativeEnergyMatrix [i][j] = std::min (energyMatrix[i][j] + cumulativeEnergyMatrix[i-1][j], energyMatrix[i][j] + cumulativeEnergyMatrix[i][j-1]);
+            }
+            else
+            {
+                cumulativeEnergyMatrix [i][j] = findCumulativeEnergy(energyMatrix[i][j], cumulativeEnergyMatrix[i-1][j-1], cumulativeEnergyMatrix[i-1][j], cumulativeEnergyMatrix[i-1][j+1]);
+            }
+        }
+    }
 
-    // for (int i = 0; i< rows; i++) //fill in energy matrix
-    // {
-    //     for(int j =0; j<columns; j++)
-    //     {   
-    //         cout << energyMatrix [i][j] << " ";
-    //     }
-    //     cout << endl;
-    // }
+    for (int i = 0; i< columns; i++) //fill in energy matrix
+    {
+        for(int j = 0; j<rows; j++)
+        {   
+            cout << cumulativeEnergyMatrix [i][j] << " ";
+        }
+        cout << endl;
+        cout << endl;
+    }
+
     return 0;
 }
