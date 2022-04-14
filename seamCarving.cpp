@@ -207,7 +207,8 @@ int main(int argc, char *argv[]) {
             }
         }      
     }
-    string fileNameEdited = filename.substr(0, filename.length()-4);
+
+    string fileNameEdited = filename.substr(0, filename.length()-4); // output the seam to a file
     fileNameEdited = fileNameEdited.append("_processed.pgm");
     ofstream outfile;
     outfile.open(fileNameEdited);
@@ -220,6 +221,24 @@ int main(int argc, char *argv[]) {
         }
         outfile << endl;
     }
+
+    for(int i = 0; i < rows; i++) // remove the seam from the array and compress the array down to have 1 less column (vertical seam removal)
+    {
+      for(int j = 0; j < columns; j++)
+      {
+        if(carvedSeam[i][j] == 1)
+        {
+          for(int w = j; w < columns - 2; w++)
+          {
+          cumulativeEnergyMatrix[i][w] = cumulativeEnergyMatrix[i][w + 1];
+          fileContentsArray[i][w] = fileContentsArray[i][w + 1];
+          }
+          cumulativeEnergyMatrix[i][columns -1] = 0;
+          fileContentsArray[i][columns -1] = 0;
+        }
+      }
+    }
+    --columns;
 
     return 0;
 }
