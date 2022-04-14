@@ -31,7 +31,6 @@ int findCumulativeEnergy(int block, int left, int above, int right)
 }
 
 int main(int argc, char *argv[]) {
-    string stringTemp;
     std::string filename = argv[1];
 
     std::string stringVerticalSeams = argv[2];
@@ -41,42 +40,32 @@ int main(int argc, char *argv[]) {
     int horizontalSeams = stoi(stringHorizontalSeams);
 
     ifstream myFile;
-    string junk; 
+    string junk;
+
     myFile.open (filename);
-
     getline(myFile, junk);
-        cout << junk << endl;
     getline(myFile, junk);
-        cout << junk << endl;
-
     getline(myFile, junk);
     int columns = stoi(junk.substr(0, junk.find(' ')));
-        cout <<"columns: " <<columns << endl;
     int rows = stoi(junk.substr(junk.find(' '), junk.find('\n')));
-        cout << "rows: "<< rows << endl;
     getline(myFile, junk); // first 255    
     string singleLineOfAllValues;
-    while(!myFile.eof())
-    {
+    while(!myFile.eof()){
         getline(myFile, junk);
         singleLineOfAllValues.append(junk);
     }
-
     myFile.close();
+
     int fileContentsArray [rows] [columns];
     stringstream stream(singleLineOfAllValues);
 
-    for (int i = 0; i< rows ; i++)
-    {
-        for(int j =0; j<columns; j++)
-        {
+    for (int i = 0; i< rows ; i++){
+        for(int j =0; j<columns; j++){
             stream>> fileContentsArray[i][j];
-            // cout << fileContentsArray[i][j] << " ";
         }
-        // cout << endl;
     }
 
-        int energyMatrix [rows][columns];
+    int energyMatrix [rows][columns];
 
     for (int i = 0; i< rows; i++) //fill in energy matrix
     {
@@ -122,7 +111,6 @@ int main(int argc, char *argv[]) {
     }
 
     int cumulativeEnergyMatrix[rows][columns] ;
-
     for (int i = 0; i< rows; i++) //fill in energy matrix
     {
         for(int j = 0; j<columns; j++)
@@ -158,8 +146,10 @@ int main(int argc, char *argv[]) {
             carvedSeam[i][j] = 0;
         }    
     }
+
+    
     int currentSmallest = cumulativeEnergyMatrix[rows-1][0]; // current smallest is initially bottom left corner
-    int root = 0; //position of smallest cum. energy
+    int root = 0; //position of smallest cumulative. energy
     for(int i = 1; i < columns; ++i) // find leftmost smallest number in last row
     {
         if(currentSmallest != std::min(currentSmallest, cumulativeEnergyMatrix[rows-1][i]))
@@ -169,7 +159,7 @@ int main(int argc, char *argv[]) {
         }
     }
     carvedSeam[rows-1][root] = 1;
-
+    
     for(int i = rows-1; i >= 0 ; i--) // start at bottom , traverse upwards
     {
         if(root == 0) // positioned at leftmost column... can only compare number above and to the top right
@@ -179,20 +169,20 @@ int main(int argc, char *argv[]) {
             {
                 carvedSeam[i][root] = 1;
             }
-            if(small == cumulativeEnergyMatrix[i][root + 1])
+            else if(small == cumulativeEnergyMatrix[i][root + 1])
             {
                 carvedSeam[i][root + 1] = 1;
-                ++root;
+                root++;
             }
         }
-        if(root == columns) // positioned at far right column... can only compare number above and to the top right
+        else if(root == columns) // positioned at far right column... can only compare number above and to the top left
         {
             int small = std::min(cumulativeEnergyMatrix[i][root], cumulativeEnergyMatrix[i][root-1]);
             if(small == cumulativeEnergyMatrix[i][root])
             {
                 carvedSeam[i][root] = 1;
             }
-            if(small == cumulativeEnergyMatrix[i][root - 1])
+            else if(small == cumulativeEnergyMatrix[i][root - 1])
             {
                 carvedSeam[i][root - 1] = 1;
                 --root;
@@ -205,26 +195,30 @@ int main(int argc, char *argv[]) {
             {
                 carvedSeam[i][root] = 1;
             }
-            if(currentSmallest == cumulativeEnergyMatrix[i][root + 1])
+            else if(currentSmallest == cumulativeEnergyMatrix[i][root + 1])
             {
                 carvedSeam[i][root + 1] = 1;
                 ++root;
             }
-            if(currentSmallest == cumulativeEnergyMatrix[i][root-1])
+            else if(currentSmallest == cumulativeEnergyMatrix[i][root-1])
             {
                 carvedSeam[i][root-1] = 1;
                 --root;
             }
         }      
     }
+    string fileNameEdited = filename.substr(0, filename.length()-4);
+    fileNameEdited = fileNameEdited.append("_processed.pgm");
+    ofstream outfile;
+    outfile.open(fileNameEdited);
 
     for (int i = 0; i< rows ; i++)
     {
         for(int j =0; j<columns; j++)
         {
-             cout << carvedSeam [i][j] << " ";
+             outfile << carvedSeam [i][j] << " ";
         }
-        cout << endl;
+        outfile << endl;
     }
 
     return 0;
