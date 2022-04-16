@@ -69,222 +69,221 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    for(int verticalSeamRemovals = 0; verticalSeamRemovals<verticalSeams; verticalSeamRemovals++)
+    {
+        for (int i = 0; i< rows; i++) //fill in energy matrix
+        {
+            for(int j =0; j<columns; j++)
+            {   
+                if (i == 0 && j == 0)// top left corner
+                {
+                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j], fileContentsArray[i][j+1], fileContentsArray[i][j], fileContentsArray[i+1][j]);
+                }
+                else if (i== rows -1 && j ==0)// top right corner
+                {
+                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j], fileContentsArray[i][j+1], fileContentsArray[i-1][j], fileContentsArray[i][j]);
+                }
+                else if (i == 0 && j == columns -1) /// bottom left
+                {
+                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j], fileContentsArray[i][j], fileContentsArray[i+1][j]);
+                }
+                else if (i==rows -1 &&  j == columns -1) // bottom right
+                {
+                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j],  fileContentsArray[i-1][j], fileContentsArray[i][j]);
+                }
+                else if (i == 0)// leftmost column
+                {
+                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j+1], fileContentsArray[i][j], fileContentsArray[i+1][j]);
+                }
+                else if (j == 0)// top row
+                {
+                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j], fileContentsArray[i][j+1], fileContentsArray[i-1][j], fileContentsArray[i+1][j]);         
+                }
+                else if (j == columns -1) // rightmost column
+                {
+                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i-1][j], fileContentsArray[i+1][j], fileContentsArray[i][j-1], fileContentsArray[i][j]);
+                }
+                else if (i==rows -1)//bottom row
+                {
+                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i-1][j], fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j+1]);  
+                }
+                else // somewhere in the middle 
+                {
+                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j+1], fileContentsArray[i-1][j], fileContentsArray[i+1][j]);    
+                }
+            }
+        }
 
-    // for(int verticalSeamRemovals = 0; verticalSeamRemovals<verticalSeams; verticalSeamRemovals++)
-    // {
-    //     for (int i = 0; i< rows; i++) //fill in energy matrix
-    //     {
-    //         for(int j =0; j<columns; j++)
-    //         {   
-    //             if (i == 0 && j == 0)// top left corner
-    //             {
-    //                 energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j], fileContentsArray[i][j+1], fileContentsArray[i][j], fileContentsArray[i+1][j]);
-    //             }
-    //             else if (i== rows -1 && j ==0)// top right corner
-    //             {
-    //                 energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j], fileContentsArray[i][j+1], fileContentsArray[i-1][j], fileContentsArray[i][j]);
-    //             }
-    //             else if (i == 0 && j == columns -1) /// bottom left
-    //             {
-    //                 energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j], fileContentsArray[i][j], fileContentsArray[i+1][j]);
-    //             }
-    //             else if (i==rows -1 &&  j == columns -1) // bottom right
-    //             {
-    //                 energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j],  fileContentsArray[i-1][j], fileContentsArray[i][j]);
-    //             }
-    //             else if (i == 0)// leftmost column
-    //             {
-    //                 energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j+1], fileContentsArray[i][j], fileContentsArray[i+1][j]);
-    //             }
-    //             else if (j == 0)// top row
-    //             {
-    //                 energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j], fileContentsArray[i][j+1], fileContentsArray[i-1][j], fileContentsArray[i+1][j]);         
-    //             }
-    //             else if (j == columns -1) // rightmost column
-    //             {
-    //                 energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i-1][j], fileContentsArray[i+1][j], fileContentsArray[i][j-1], fileContentsArray[i][j]);
-    //             }
-    //             else if (i==rows -1)//bottom row
-    //             {
-    //                 energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i-1][j], fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j+1]);  
-    //             }
-    //             else // somewhere in the middle 
-    //             {
-    //                 energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j+1], fileContentsArray[i-1][j], fileContentsArray[i+1][j]);    
-    //             }
-    //         }
-    //     }
-
-    //     for (int i = 0; i< rows; i++) //fill in energy matrix
-    //     {
-    //         for(int j = 0; j<columns; j++)
-    //         {   
-    //             if (i == 0) // first rows numbers do not change
-    //             {
-    //                 cumulativeEnergyMatrix [i][j] = energyMatrix [i][j];
-    //             }
+        for (int i = 0; i< rows; i++) //fill in energy matrix
+        {
+            for(int j = 0; j<columns; j++)
+            {   
+                if (i == 0) // first rows numbers do not change
+                {
+                    cumulativeEnergyMatrix [i][j] = energyMatrix [i][j];
+                }
                 
-    //             else if (j == 0) // first column does not have a left value
-    //             {
-    //                 //cumulativeEnergyMatrix [i][j] = std::min (energyMatrix[i][j] + cumulativeEnergyMatrix[i-1][j], energyMatrix[i][j] + cumulativeEnergyMatrix[i-1][j+1]);
-    //                 //cumulativeEnergyMatrix [i][j] = std::min (energyMatrix[i][j] + cumulativeEnergyMatrix[i-1][j], energyMatrix[i][j] + cumulativeEnergyMatrix[i][j+1]);
-    //                 cumulativeEnergyMatrix [i][j] = std::min (energyMatrix[i][j] + cumulativeEnergyMatrix[i-1][j], energyMatrix[i][j] + cumulativeEnergyMatrix[i-1][j+1]);
-    //             }
-    //             else if (j == columns -1) //  last column does not have a right value
-    //             {
-    //                 cumulativeEnergyMatrix [i][j] = std::min (energyMatrix[i][j] + cumulativeEnergyMatrix[i-1][j], energyMatrix[i][j] + cumulativeEnergyMatrix[i-1][j-1]);
-    //             }
-    //             else
-    //             {
-    //                 cumulativeEnergyMatrix [i][j] = findCumulativeEnergy(energyMatrix[i][j], cumulativeEnergyMatrix[i-1][j-1], cumulativeEnergyMatrix[i-1][j], cumulativeEnergyMatrix[i-1][j+1]);
-    //             }
-    //         }
-    //     }
+                else if (j == 0) // first column does not have a left value
+                {
+                    //cumulativeEnergyMatrix [i][j] = std::min (energyMatrix[i][j] + cumulativeEnergyMatrix[i-1][j], energyMatrix[i][j] + cumulativeEnergyMatrix[i-1][j+1]);
+                    //cumulativeEnergyMatrix [i][j] = std::min (energyMatrix[i][j] + cumulativeEnergyMatrix[i-1][j], energyMatrix[i][j] + cumulativeEnergyMatrix[i][j+1]);
+                    cumulativeEnergyMatrix [i][j] = std::min (energyMatrix[i][j] + cumulativeEnergyMatrix[i-1][j], energyMatrix[i][j] + cumulativeEnergyMatrix[i-1][j+1]);
+                }
+                else if (j == columns -1) //  last column does not have a right value
+                {
+                    cumulativeEnergyMatrix [i][j] = std::min (energyMatrix[i][j] + cumulativeEnergyMatrix[i-1][j], energyMatrix[i][j] + cumulativeEnergyMatrix[i-1][j-1]);
+                }
+                else
+                {
+                    cumulativeEnergyMatrix [i][j] = findCumulativeEnergy(energyMatrix[i][j], cumulativeEnergyMatrix[i-1][j-1], cumulativeEnergyMatrix[i-1][j], cumulativeEnergyMatrix[i-1][j+1]);
+                }
+            }
+        }
 
-    //     for (int i = 0; i<rows; i++) // assign all initial values to zero
-    //     {
-    //         for(int j = 0; j<columns; j++)
-    //         {
-    //             carvedSeam[i][j] = 0;
-    //         }    
-    //     }
+        for (int i = 0; i<rows; i++) // assign all initial values to zero
+        {
+            for(int j = 0; j<columns; j++)
+            {
+                carvedSeam[i][j] = 0;
+            }    
+        }
 
         
-    //     int currentSmallest = cumulativeEnergyMatrix[rows-1][0]; // current smallest is initially bottom left corner
-    //     int root = 0; //position of smallest cumulative. energy
-    //     for(int i = 1; i < columns; ++i) // find leftmost smallest number in last row
-    //     {
-    //         if(currentSmallest != std::min(currentSmallest, cumulativeEnergyMatrix[rows-1][i]))
-    //         {
-    //         currentSmallest = std::min(currentSmallest, cumulativeEnergyMatrix[rows-1][i]);
-    //         root = i;
-    //         }
-    //     }
-    //     carvedSeam[rows-1][root] = 1;
+        int currentSmallest = cumulativeEnergyMatrix[rows-1][0]; // current smallest is initially bottom left corner
+        int root = 0; //position of smallest cumulative. energy
+        for(int i = 1; i < columns; ++i) // find leftmost smallest number in last row
+        {
+            if(currentSmallest != std::min(currentSmallest, cumulativeEnergyMatrix[rows-1][i]))
+            {
+            currentSmallest = std::min(currentSmallest, cumulativeEnergyMatrix[rows-1][i]);
+            root = i;
+            }
+        }
+        carvedSeam[rows-1][root] = 1;
         
-    //     for(int i = rows-1; i >= 0 ; i--) // start at bottom , traverse upwards
-    //     {
-    //         if(root == 0) // positioned at leftmost column... can only compare number above and to the top right
-    //         {
-    //             int small = std::min(cumulativeEnergyMatrix[i][root], cumulativeEnergyMatrix[i][root+1]);
-    //             if(small == cumulativeEnergyMatrix[i][root])
-    //             {
-    //                 carvedSeam[i][root] = 1;
-    //             }
-    //             else if(small == cumulativeEnergyMatrix[i][root + 1])
-    //             {
-    //                 carvedSeam[i][root + 1] = 1;
-    //                 root++;
-    //             }
-    //         }
-    //         else if(root == columns) // positioned at far right column... can only compare number above and to the top left
-    //         {
-    //             int small = std::min(cumulativeEnergyMatrix[i][root], cumulativeEnergyMatrix[i][root-1]);
-    //             if(small == cumulativeEnergyMatrix[i][root])
-    //             {
-    //                 carvedSeam[i][root] = 1;
-    //             }
-    //             else if(small == cumulativeEnergyMatrix[i][root - 1])
-    //             {
-    //                 carvedSeam[i][root - 1] = 1;
-    //                 --root;
-    //             }
-    //         }
-    //         else // somewhere in the middle 
-    //         {
-    //             int currentSmallest = smallest(cumulativeEnergyMatrix[i][root], cumulativeEnergyMatrix[i][root-1], cumulativeEnergyMatrix[i][root + 1]);
-    //             if(currentSmallest == cumulativeEnergyMatrix[i][root])
-    //             {
-    //                 carvedSeam[i][root] = 1;
-    //             }
-    //             else if(currentSmallest == cumulativeEnergyMatrix[i][root + 1])
-    //             {
-    //                 carvedSeam[i][root + 1] = 1;
-    //                 ++root;
-    //             }
-    //             else if(currentSmallest == cumulativeEnergyMatrix[i][root-1])
-    //             {
-    //                 carvedSeam[i][root-1] = 1;
-    //                 --root;
-    //             }
-    //         }      
-    //     }
-
-    //     for(int i = 0; i < rows; i++) // remove the seam from the array and compress the array down to have 1 less column (vertical seam removal)
-    //     {
-    //         for(int j = 0; j < columns; j++)
-    //         {
-    //             if(carvedSeam[i][j] == 1)
-    //             {
-    //                 for (int x = j; x < columns -1; x++) // translate the columns over one to remove the seam
-    //                 {
-    //                     carvedSeam[i][x] = carvedSeam[i][ x + 1 ];
-    //                     cumulativeEnergyMatrix[i][x] = cumulativeEnergyMatrix[i][ x + 1 ];
-    //                     fileContentsArray[i][x] = fileContentsArray[i][ x + 1 ];
-    //                 }
-    //             }
-    //         }
-    //         carvedSeam[i][ columns - 1 ] = -1;              //make the last column a -1, to show everything has translated and is removed
-    //         cumulativeEnergyMatrix[i][ columns - 1 ] = -1;
-    //         fileContentsArray[i][ columns - 1 ] = -1;
-    //     }
-    //     --columns;
-    // }
-
-    for(int horizontalSeamRemovals = 0; horizontalSeamRemovals < horizontalSeams; horizontalSeamRemovals++)
-    {
-    for (int i = 0; i< rows; i++) //fill in energy matrix
-    {
-        for(int j =0; j<columns; j++)
-        {   
-            if (i == 0 && j == 0)// top left corner
+        for(int i = rows-1; i >= 0 ; i--) // start at bottom , traverse upwards
+        {
+            if(root == 0) // positioned at leftmost column... can only compare number above and to the top right
             {
-                energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j], fileContentsArray[i][j+1], fileContentsArray[i][j], fileContentsArray[i+1][j]);
+                int small = std::min(cumulativeEnergyMatrix[i][root], cumulativeEnergyMatrix[i][root+1]);
+                if(small == cumulativeEnergyMatrix[i][root])
+                {
+                    carvedSeam[i][root] = 1;
+                }
+                else if(small == cumulativeEnergyMatrix[i][root + 1])
+                {
+                    carvedSeam[i][root + 1] = 1;
+                    root++;
+                }
             }
-            else if (i== rows -1 && j ==0)// top right corner
+            else if(root == columns) // positioned at far right column... can only compare number above and to the top left
             {
-                energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j], fileContentsArray[i][j+1], fileContentsArray[i-1][j], fileContentsArray[i][j]);
-            }
-            else if (i == 0 && j == columns -1) /// bottom left
-            {
-                energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j], fileContentsArray[i][j], fileContentsArray[i+1][j]);
-            }
-            else if (i==rows -1 &&  j == columns -1) // bottom right
-            {
-                energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j],  fileContentsArray[i-1][j], fileContentsArray[i][j]);
-            }
-            else if (i == 0)// leftmost column
-            {
-                energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j+1], fileContentsArray[i][j], fileContentsArray[i+1][j]);
-            }
-            else if (j == 0)// top row
-            {
-                energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j], fileContentsArray[i][j+1], fileContentsArray[i-1][j], fileContentsArray[i+1][j]);         
-            }
-            else if (j == columns -1) // rightmost column
-            {
-                energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i-1][j], fileContentsArray[i+1][j], fileContentsArray[i][j-1], fileContentsArray[i][j]);
-            }
-            else if (i==rows -1)//bottom row
-            {
-                energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i-1][j], fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j+1]);  
+                int small = std::min(cumulativeEnergyMatrix[i][root], cumulativeEnergyMatrix[i][root-1]);
+                if(small == cumulativeEnergyMatrix[i][root])
+                {
+                    carvedSeam[i][root] = 1;
+                }
+                else if(small == cumulativeEnergyMatrix[i][root - 1])
+                {
+                    carvedSeam[i][root - 1] = 1;
+                    --root;
+                }
             }
             else // somewhere in the middle 
             {
-                energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j+1], fileContentsArray[i-1][j], fileContentsArray[i+1][j]);    
-            }
+                int currentSmallest = smallest(cumulativeEnergyMatrix[i][root], cumulativeEnergyMatrix[i][root-1], cumulativeEnergyMatrix[i][root + 1]);
+                if(currentSmallest == cumulativeEnergyMatrix[i][root])
+                {
+                    carvedSeam[i][root] = 1;
+                }
+                else if(currentSmallest == cumulativeEnergyMatrix[i][root + 1])
+                {
+                    carvedSeam[i][root + 1] = 1;
+                    ++root;
+                }
+                else if(currentSmallest == cumulativeEnergyMatrix[i][root-1])
+                {
+                    carvedSeam[i][root-1] = 1;
+                    --root;
+                }
+            }      
         }
+
+        for(int i = 0; i < rows; i++) // remove the seam from the array and compress the array down to have 1 less column (vertical seam removal)
+        {
+            for(int j = 0; j < columns; j++)
+            {
+                if(carvedSeam[i][j] == 1)
+                {
+                    for (int x = j; x < columns -1; x++) // translate the columns over one to remove the seam
+                    {
+                        carvedSeam[i][x] = carvedSeam[i][ x + 1 ];
+                        cumulativeEnergyMatrix[i][x] = cumulativeEnergyMatrix[i][ x + 1 ];
+                        fileContentsArray[i][x] = fileContentsArray[i][ x + 1 ];
+                    }
+                }
+            }
+            carvedSeam[i][ columns - 1 ] = -1;              //make the last column a -1, to show everything has translated and is removed
+            cumulativeEnergyMatrix[i][ columns - 1 ] = -1;
+            fileContentsArray[i][ columns - 1 ] = -1;
+        }
+        --columns;
     }
 
-    int hEnergyMatrix[columns][rows];
-    for (int i = 0; i< columns; i++) //rotate energy matrix
+    for(int horizontalSeamRemovals = 0; horizontalSeamRemovals < horizontalSeams; horizontalSeamRemovals++)
     {
-        for (int j = 0; j< rows; j++)
+        for (int i = 0; i< rows; i++) //fill in energy matrix
         {
-            hEnergyMatrix[i][j] = energyMatrix[j][i];
+            for(int j =0; j<columns; j++)
+            {   
+                if (i == 0 && j == 0)// top left corner
+                {
+                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j], fileContentsArray[i][j+1], fileContentsArray[i][j], fileContentsArray[i+1][j]);
+                }
+                else if (i== rows -1 && j ==0)// top right corner
+                {
+                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j], fileContentsArray[i][j+1], fileContentsArray[i-1][j], fileContentsArray[i][j]);
+                }
+                else if (i == 0 && j == columns -1) /// bottom left
+                {
+                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j], fileContentsArray[i][j], fileContentsArray[i+1][j]);
+                }
+                else if (i==rows -1 &&  j == columns -1) // bottom right
+                {
+                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j],  fileContentsArray[i-1][j], fileContentsArray[i][j]);
+                }
+                else if (i == 0)// leftmost column
+                {
+                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j+1], fileContentsArray[i][j], fileContentsArray[i+1][j]);
+                }
+                else if (j == 0)// top row
+                {
+                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j], fileContentsArray[i][j+1], fileContentsArray[i-1][j], fileContentsArray[i+1][j]);         
+                }
+                else if (j == columns -1) // rightmost column
+                {
+                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i-1][j], fileContentsArray[i+1][j], fileContentsArray[i][j-1], fileContentsArray[i][j]);
+                }
+                else if (i==rows -1)//bottom row
+                {
+                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i-1][j], fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j+1]);  
+                }
+                else // somewhere in the middle 
+                {
+                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j+1], fileContentsArray[i-1][j], fileContentsArray[i+1][j]);    
+                }
+            }
         }
-    }
-    int hCumulativeEnergyMatrix[columns][rows] ;
+
+        int hEnergyMatrix[columns][rows];
+        for (int i = 0; i< columns; i++) //rotate energy matrix
+        {
+            for (int j = 0; j< rows; j++)
+            {
+                hEnergyMatrix[i][j] = energyMatrix[j][i];
+            }
+        }
+        int hCumulativeEnergyMatrix[columns][rows] ;
         for (int i = 0; i< columns; i++) 
         {
             for(int j = 0; j<rows; j++)
@@ -408,11 +407,8 @@ int main(int argc, char *argv[]) {
         for(int j =0; j<columns; j++)
         {
             outfile << carvedSeam [i][j] << " ";
-            cout << fileContentsArray [i][j] << " ";
         }
         outfile << endl;
-        cout << endl;
     }
-
     return 0;
 }
