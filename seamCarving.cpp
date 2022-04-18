@@ -179,20 +179,25 @@ int main(int argc, char *argv[]) {
             else if(root == columns) // positioned at far right column... can only compare number above and to the top left
             {
                 int small = std::min(cumulativeEnergyMatrix[i][root], cumulativeEnergyMatrix[i][root-1]);
-                if(small == cumulativeEnergyMatrix[i][root])
-                {
-                    carvedSeam[i][root] = 1;
-                }
-                else if(small == cumulativeEnergyMatrix[i][root - 1])
+                if(small == cumulativeEnergyMatrix[i][root - 1])
                 {
                     carvedSeam[i][root - 1] = 1;
                     --root;
+                }
+                else if(small == cumulativeEnergyMatrix[i][root])
+                {
+                    carvedSeam[i][root] = 1;
                 }
             }
             else // somewhere in the middle 
             {
                 int currentSmallest = smallest(cumulativeEnergyMatrix[i][root], cumulativeEnergyMatrix[i][root-1], cumulativeEnergyMatrix[i][root + 1]);
-                if(currentSmallest == cumulativeEnergyMatrix[i][root])
+                if(currentSmallest == cumulativeEnergyMatrix[i][root-1])
+                {
+                    carvedSeam[i][root-1] = 1;
+                    --root;
+                }
+                else if(currentSmallest == cumulativeEnergyMatrix[i][root])
                 {
                     carvedSeam[i][root] = 1;
                 }
@@ -200,11 +205,6 @@ int main(int argc, char *argv[]) {
                 {
                     carvedSeam[i][root + 1] = 1;
                     ++root;
-                }
-                else if(currentSmallest == cumulativeEnergyMatrix[i][root-1])
-                {
-                    carvedSeam[i][root-1] = 1;
-                    --root;
                 }
             }      
         }
@@ -339,34 +339,33 @@ int main(int argc, char *argv[]) {
                 else if(small == hCumulativeEnergyMatrix[i][root + 1])
                 {
                     hCarvedSeam[i][root + 1] = 1;
-                    --root;
+                    ++root;
                 }
             }
             else if(root == rows-1) // positioned at far right column... can only compare number above and to the top left
             {
                 int small = std::min(hCumulativeEnergyMatrix[i][root], hCumulativeEnergyMatrix[i][root-1]);
-                if(small == hCumulativeEnergyMatrix[i][root])
-                {
-                    hCarvedSeam[i][root] = 1;
-                }
-                else if(small == hCumulativeEnergyMatrix[i][root - 1])
+                if(small == hCumulativeEnergyMatrix[i][root - 1])
                 {
                     hCarvedSeam[i][root - 1] = 1;
                     --root;
+                }
+                else if(small == hCumulativeEnergyMatrix[i][root])
+                {
+                    hCarvedSeam[i][root] = 1;
                 }
             }
             else // somewhere in the middle 
             {
                 int currentSmallest = smallest(hCumulativeEnergyMatrix[i][root], hCumulativeEnergyMatrix[i][root-1], hCumulativeEnergyMatrix[i][root + 1]);
-                if(currentSmallest == hCumulativeEnergyMatrix[i][root])
-                {
-                    hCarvedSeam[i][root] = 1;
-                }
-                else if(currentSmallest == hCumulativeEnergyMatrix[i][root-1])
+                if(currentSmallest == hCumulativeEnergyMatrix[i][root-1])
                 {
                     hCarvedSeam[i][root - 1] = 1;
                     --root;
-
+                }
+                else if(currentSmallest == hCumulativeEnergyMatrix[i][root])
+                {
+                    hCarvedSeam[i][root] = 1;
                 }
                 else if(currentSmallest == hCumulativeEnergyMatrix[i][root + 1])
                 {
@@ -401,12 +400,15 @@ int main(int argc, char *argv[]) {
     fileNameEdited = fileNameEdited.append("_processed.pgm");
     ofstream outfile;
     outfile.open(fileNameEdited);
-
+    outfile << "P2" << endl;
+    outfile << "# Created by IrfanView" << endl;
+    outfile << columns << " " << rows << endl;
+    outfile << "255" << endl;
     for (int i = 0; i< rows ; i++)
     {
         for(int j =0; j<columns; j++)
         {
-            outfile << carvedSeam [i][j] << " ";
+            outfile << fileContentsArray [i][j] << " ";
         }
         outfile << endl;
     }
