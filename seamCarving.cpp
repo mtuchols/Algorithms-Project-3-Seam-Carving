@@ -230,59 +230,61 @@ int main(int argc, char *argv[]) {
         --columns;
     }
 
+    int horizontalContentsArray[columns][rows];
+    for (int i = 0; i< columns; i++)
+    {
+        for (int j = 0; j< rows; j++)
+        {
+            horizontalContentsArray[i][j] = fileContentsArray[j][i];
+        }
+    }
     for(int horizontalSeamRemovals = 0; horizontalSeamRemovals < horizontalSeams; horizontalSeamRemovals++)
     {
-        for (int i = 0; i< rows; i++) //fill in energy matrix
+        int hEnergyMatrix[columns][rows];
+
+        for (int i = 0; i< columns; i++) //fill in energy matrix
         {
-            for(int j =0; j<columns; j++)
+            for(int j =0; j<rows; j++)
             {   
                 if (i == 0 && j == 0)// top left corner
                 {
-                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j], fileContentsArray[i][j+1], fileContentsArray[i][j], fileContentsArray[i+1][j]);
+                    hEnergyMatrix [i][j] = findEnergy(horizontalContentsArray[i][j], horizontalContentsArray[i][j], horizontalContentsArray[i][j+1], horizontalContentsArray[i][j], horizontalContentsArray[i+1][j]);
                 }
                 else if (i== rows -1 && j ==0)// top right corner
                 {
-                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j], fileContentsArray[i][j+1], fileContentsArray[i-1][j], fileContentsArray[i][j]);
+                    hEnergyMatrix [i][j] = findEnergy(horizontalContentsArray[i][j], horizontalContentsArray[i][j], horizontalContentsArray[i][j+1], horizontalContentsArray[i-1][j], horizontalContentsArray[i][j]);
                 }
                 else if (i == 0 && j == columns -1) /// bottom left
                 {
-                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j], fileContentsArray[i][j], fileContentsArray[i+1][j]);
+                    hEnergyMatrix [i][j] = findEnergy(horizontalContentsArray[i][j], horizontalContentsArray[i][j-1], horizontalContentsArray[i][j], horizontalContentsArray[i][j], horizontalContentsArray[i+1][j]);
                 }
                 else if (i==rows -1 &&  j == columns -1) // bottom right
                 {
-                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j],  fileContentsArray[i-1][j], fileContentsArray[i][j]);
+                    hEnergyMatrix [i][j] = findEnergy(horizontalContentsArray[i][j], horizontalContentsArray[i][j-1], horizontalContentsArray[i][j],  horizontalContentsArray[i-1][j], horizontalContentsArray[i][j]);
                 }
                 else if (i == 0)// leftmost column
                 {
-                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j+1], fileContentsArray[i][j], fileContentsArray[i+1][j]);
+                    hEnergyMatrix [i][j] = findEnergy(horizontalContentsArray[i][j], horizontalContentsArray[i][j-1], horizontalContentsArray[i][j+1], horizontalContentsArray[i][j], horizontalContentsArray[i+1][j]);
                 }
                 else if (j == 0)// top row
                 {
-                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j], fileContentsArray[i][j+1], fileContentsArray[i-1][j], fileContentsArray[i+1][j]);         
+                    hEnergyMatrix [i][j] = findEnergy(horizontalContentsArray[i][j], horizontalContentsArray[i][j], horizontalContentsArray[i][j+1], horizontalContentsArray[i-1][j], horizontalContentsArray[i+1][j]);         
                 }
                 else if (j == columns -1) // rightmost column
                 {
-                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i-1][j], fileContentsArray[i+1][j], fileContentsArray[i][j-1], fileContentsArray[i][j]);
+                    hEnergyMatrix [i][j] = findEnergy(horizontalContentsArray[i][j], horizontalContentsArray[i-1][j], horizontalContentsArray[i+1][j], horizontalContentsArray[i][j-1], horizontalContentsArray[i][j]);
                 }
                 else if (i==rows -1)//bottom row
                 {
-                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i-1][j], fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j+1]);  
+                    hEnergyMatrix [i][j] = findEnergy(horizontalContentsArray[i][j], horizontalContentsArray[i-1][j], horizontalContentsArray[i][j], horizontalContentsArray[i][j-1], horizontalContentsArray[i][j+1]);  
                 }
                 else // somewhere in the middle 
                 {
-                    energyMatrix [i][j] = findEnergy(fileContentsArray[i][j], fileContentsArray[i][j-1], fileContentsArray[i][j+1], fileContentsArray[i-1][j], fileContentsArray[i+1][j]);    
+                    hEnergyMatrix [i][j] = findEnergy(horizontalContentsArray[i][j], horizontalContentsArray[i][j-1], horizontalContentsArray[i][j+1], horizontalContentsArray[i-1][j], horizontalContentsArray[i+1][j]);    
                 }
             }
         }
 
-        int hEnergyMatrix[columns][rows];
-        for (int i = 0; i< columns; i++) //rotate energy matrix
-        {
-            for (int j = 0; j< rows; j++)
-            {
-                hEnergyMatrix[i][j] = energyMatrix[j][i];
-            }
-        }
         int hCumulativeEnergyMatrix[columns][rows] ;
         for (int i = 0; i< columns; i++) 
         {
@@ -385,15 +387,23 @@ int main(int argc, char *argv[]) {
                     {
                         hCarvedSeam[i][x] = hCarvedSeam[i][ x + 1 ];
                         hCumulativeEnergyMatrix[i][x] = hCumulativeEnergyMatrix[i][ x + 1 ];
-                        fileContentsArray[x][i] = fileContentsArray[x + 1][ i ];
+                        horizontalContentsArray[i][x] = horizontalContentsArray[i][ x + 1 ];
                     }
                 }
             }
             hCarvedSeam[i][ rows - 1 ] = -1;              //make the last column a -1, to show everything has translated and is removed
             hCumulativeEnergyMatrix[i][ rows - 1 ] = -1;
-            fileContentsArray[ rows - 1 ][ i ] = -1;
+            horizontalContentsArray[i][ rows - 1 ] = -1;
         }
         --rows;
+    }
+
+    for (int i = 0; i< rows; i++)
+    {
+        for (int j = 0; j< columns; j++)
+        {
+            fileContentsArray[i][j] = horizontalContentsArray[j][i];
+        }
     }
 
     string fileNameEdited = filename.substr(0, filename.length()-4); // output the seam to a file
